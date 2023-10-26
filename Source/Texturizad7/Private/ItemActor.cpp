@@ -3,6 +3,8 @@
 
 #include "Texturizad7/Public/ItemActor.h"
 
+#include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 AItemActor::AItemActor()
@@ -15,18 +17,34 @@ AItemActor::AItemActor()
 
 	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
 	SphereComp->SetupAttachment(MeshComp);
+
+	SphereComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	SphereComp->SetCollisionResponseToChannels(ECR_Ignore);
+	SphereComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 }
 
 // Called when the game starts or when spawned
 void AItemActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+}
+
+void AItemActor::PlayEffects()
+{
+	UGameplayStatics::SpawnEmitterAtLocation(this, PickupFX, GetActorLocation());
 }
 
 // Called every frame
 void AItemActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AItemActor::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+
+	PlayEffects();
+	
 }
 
