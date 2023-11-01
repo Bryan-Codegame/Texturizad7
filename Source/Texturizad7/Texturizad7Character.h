@@ -43,6 +43,9 @@ class ATexturizad7Character : public ACharacter
 public:
 	ATexturizad7Character();
 
+	UPROPERTY(BlueprintReadOnly, Category="Gameplay")
+	bool bIsCarryingObjective;
+
 protected:
 	virtual void BeginPlay();
 

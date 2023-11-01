@@ -4,15 +4,14 @@
 #include "Texturizad7/Public/ItemActor.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Texturizad7/Texturizad7Character.h"
 
 
 // Sets default values
 AItemActor::AItemActor()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
+	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RootComponent = MeshComp;
 
 	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
@@ -34,17 +33,19 @@ void AItemActor::PlayEffects()
 	UGameplayStatics::SpawnEmitterAtLocation(this, PickupFX, GetActorLocation());
 }
 
-// Called every frame
-void AItemActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-}
-
 void AItemActor::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
 	PlayEffects();
+
+	ATexturizad7Character* MyCharacter = Cast<ATexturizad7Character>(OtherActor);
+
+	if (MyCharacter)
+	{
+		MyCharacter->bIsCarryingObjective = true;
+		Destroy();
+	}
 	
 }
 
