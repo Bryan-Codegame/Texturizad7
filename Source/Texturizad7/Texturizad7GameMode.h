@@ -13,6 +13,11 @@ class ATexturizad7GameMode : public AGameModeBase
 
 public:
 	ATexturizad7GameMode();
+
+	void CompleteMission(APawn* Pawn);
+
+	UFUNCTION(BlueprintImplementableEvent, Category="GameMode")
+	void OnMissionComplete(APawn* Pawn);
 };
 
 

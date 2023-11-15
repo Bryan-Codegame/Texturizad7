@@ -12,3 +12,13 @@ ATexturizad7GameMode::ATexturizad7GameMode()
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
 
 }
+
+void ATexturizad7GameMode::CompleteMission(APawn* Pawn)
+{
+	if(Pawn)
+	{
+		Pawn->DisableInput(nullptr);
+	}
+
+	OnMissionComplete(Pawn);
+}
