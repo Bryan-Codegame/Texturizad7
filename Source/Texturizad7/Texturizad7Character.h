@@ -13,6 +13,7 @@ class USceneComponent;
 class UCameraComponent;
 class UAnimMontage;
 class USoundBase;
+class UPawnNoiseEmitterComponent;
 
 UCLASS(config=Game)
 class ATexturizad7Character : public ACharacter
@@ -48,6 +49,9 @@ public:
 
 protected:
 	virtual void BeginPlay();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AI")
+	UPawnNoiseEmitterComponent* NoiseEmitterComponent;
 
 public:
 		

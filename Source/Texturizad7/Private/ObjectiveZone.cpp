@@ -62,7 +62,7 @@ void AObjectiveZone::HandleOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		ATexturizad7GameMode* GM = Cast<ATexturizad7GameMode>(GetWorld()->GetAuthGameMode());
 		if(GM)
 		{
-			GM->CompleteMission(MyPawn);
+			GM->CompleteMission(MyPawn, true);
 		}
 	}
 	else

@@ -14,10 +14,10 @@ class ATexturizad7GameMode : public AGameModeBase
 public:
 	ATexturizad7GameMode();
 
-	void CompleteMission(APawn* Pawn);
+	void CompleteMission(APawn* Pawn, bool isMissionSuccess);
 
 	UFUNCTION(BlueprintImplementableEvent, Category="GameMode")
-	void OnMissionComplete(APawn* Pawn);
+	void OnMissionComplete(APawn* Pawn, bool isMissionSuccess);
 };
 
 

@@ -13,12 +13,12 @@ ATexturizad7GameMode::ATexturizad7GameMode()
 
 }
 
-void ATexturizad7GameMode::CompleteMission(APawn* Pawn)
+void ATexturizad7GameMode::CompleteMission(APawn* Pawn, bool isMissionSuccess)
 {
 	if(Pawn)
 	{
 		Pawn->DisableInput(nullptr);
 	}
 
-	OnMissionComplete(Pawn);
+	OnMissionComplete(Pawn, isMissionSuccess);
 }

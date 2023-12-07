@@ -37,7 +37,8 @@ void ATexturizad7Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAc
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
-
-		Destroy();
 	}
+
+	MakeNoise(1.0f, GetInstigator());
+	Destroy();
 }
