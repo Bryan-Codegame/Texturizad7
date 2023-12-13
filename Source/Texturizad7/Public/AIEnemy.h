@@ -8,6 +8,14 @@
 
 class UPawnSensingComponent;
 
+UENUM(BlueprintType)
+enum EAIState
+{
+	Idle,
+	Suspicious,
+	Alerted
+};
+
 UCLASS()
 class TEXTURIZAD7_API AAIEnemy : public ACharacter
 {
@@ -37,6 +45,13 @@ protected:
 	void ResetOrientation();
 
 	FTimerHandle TimerHandle_ResetOrientation;
+
+	//Enemy State
+	EAIState GuardState;
+	void SetGuardState(EAIState NewState);
+
+	UFUNCTION(BlueprintImplementableEvent, Category="AI")
+	void OnStateChanged(EAIState NewState);
 
 public:	
 	// Called every frame
