@@ -3,6 +3,7 @@
 
 #include "AIEnemy.h"
 
+#include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Texturizad7/Texturizad7GameMode.h"
 
@@ -23,6 +24,11 @@ void AAIEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	OriginalRotator = GetActorRotation();
+
+	if (bPatrol)
+	{
+		MoveToNextPatrolPoint();
+	}
 }
 
 void AAIEnemy::PostInitializeComponents()
@@ -49,6 +55,13 @@ void AAIEnemy::OnPawnSeen(APawn* SeenPawn)
 	}
 
 	SetGuardState(EAIState::Alerted);
+
+	//Stop Movement
+	AController* AIController = GetController();
+	if (AIController)
+	{
+		AIController->StopMovement();
+	}
 }
 
 void AAIEnemy::OnNoiseHear(APawn* PawnInstigator, const FVector& Location, float Volume)
@@ -73,6 +86,13 @@ void AAIEnemy::OnNoiseHear(APawn* PawnInstigator, const FVector& Location, float
 	GetWorldTimerManager().SetTimer(TimerHandle_ResetOrientation, this, &AAIEnemy::ResetOrientation, 3.0f);
 
 	SetGuardState(EAIState::Suspicious);
+
+	//Stop Movement
+	AController* AIController = GetController();
+	if (AIController)
+	{
+		AIController->StopMovement();
+	}
 	
 }
 
@@ -85,6 +105,11 @@ void AAIEnemy::ResetOrientation()
 	
 	SetActorRotation(OriginalRotator);
 	SetGuardState(EAIState::Idle);
+
+	if(bPatrol)
+	{
+		MoveToNextPatrolPoint();
+	}
 }
 
 void AAIEnemy::SetGuardState(EAIState NewState)
@@ -105,6 +130,25 @@ void AAIEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (CurrentPatrolPoint)
+	{
+		FVector Distance = GetActorLocation() - CurrentPatrolPoint->GetActorLocation();
+		float DistanceToGoal = Distance.Size();
+
+		if (DistanceToGoal < 60)
+		{
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Orange,
+					FString::Printf(TEXT("DistanceGoal: %f"), DistanceToGoal));
+			}
+
+			MoveToNextPatrolPoint();
+		}
+
+		
+	}
+
 }
 
 // Called to bind functionality to input
@@ -112,5 +156,19 @@ void AAIEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AAIEnemy::MoveToNextPatrolPoint()
+{
+	if(CurrentPatrolPoint == nullptr || CurrentPatrolPoint == SecondPatrolPoint)
+	{
+		CurrentPatrolPoint = FirstPatrolPoint;
+	}
+	else
+	{
+		CurrentPatrolPoint = SecondPatrolPoint;
+	}
+
+	UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), CurrentPatrolPoint);
 }
 

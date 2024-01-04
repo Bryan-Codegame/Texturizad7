@@ -50,6 +50,8 @@ public:
 protected:
 	virtual void BeginPlay();
 
+	virtual void Tick(float DeltaSeconds) override; 
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="AI")
 	UPawnNoiseEmitterComponent* NoiseEmitterComponent;
 

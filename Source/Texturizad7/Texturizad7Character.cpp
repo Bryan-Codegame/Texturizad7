@@ -55,6 +55,19 @@ void ATexturizad7Character::BeginPlay()
 
 }
 
+void ATexturizad7Character::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (!IsLocallyControlled())
+	{
+		FRotator NewRot = FirstPersonCameraComponent->GetRelativeRotation();
+		NewRot.Pitch = RemoteViewPitch * 360.0f /255.0f;
+
+		FirstPersonCameraComponent->SetRelativeRotation(NewRot);
+	}
+}
+
 //////////////////////////////////////////////////////////////////////////// Input
 
 void ATexturizad7Character::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
