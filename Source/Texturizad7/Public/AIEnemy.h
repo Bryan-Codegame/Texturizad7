@@ -9,7 +9,7 @@
 class UPawnSensingComponent;
 
 UENUM(BlueprintType)
-enum EAIState
+enum class EAIState : uint8
 {
 	Idle,
 	Suspicious,
@@ -24,6 +24,8 @@ class TEXTURIZAD7_API AAIEnemy : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AAIEnemy();
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -45,9 +47,15 @@ protected:
 	void ResetOrientation();
 
 	FTimerHandle TimerHandle_ResetOrientation;
-
+	
+	
 	//Enemy State
+	UPROPERTY(ReplicatedUsing = OnRep_GuardState)
 	EAIState GuardState;
+
+	UFUNCTION()
+	void OnRep_GuardState();
+	
 	void SetGuardState(EAIState NewState);
 
 	UFUNCTION(BlueprintImplementableEvent, Category="AI")

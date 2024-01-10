@@ -10,6 +10,9 @@
 // Sets default values
 AItemActor::AItemActor()
 {
+
+	//bReplicates = true;
+	
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
 	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RootComponent = MeshComp;
@@ -39,13 +42,24 @@ void AItemActor::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	PlayEffects();
 
+	/*if (HasAuthority())
+	{
+		ATexturizad7Character* MyCharacter = Cast<ATexturizad7Character>(OtherActor);
+
+		if (MyCharacter)
+		{
+			MyCharacter->bIsCarryingObjective = true;
+			Destroy();
+		}	
+	}*/
+
 	ATexturizad7Character* MyCharacter = Cast<ATexturizad7Character>(OtherActor);
 
 	if (MyCharacter)
 	{
 		MyCharacter->bIsCarryingObjective = true;
 		Destroy();
-	}
+	}	
 	
 }
 

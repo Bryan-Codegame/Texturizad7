@@ -4,6 +4,7 @@
 #include "AIEnemy.h"
 
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "Net/UnrealNetwork.h"
 #include "Perception/PawnSensingComponent.h"
 #include "Texturizad7/Texturizad7GameMode.h"
 
@@ -17,6 +18,13 @@ AAIEnemy::AAIEnemy()
 
 	GuardState = EAIState::Idle;
 	
+}
+
+void AAIEnemy::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AAIEnemy, GuardState);
 }
 
 // Called when the game starts or when spawned
@@ -112,6 +120,11 @@ void AAIEnemy::ResetOrientation()
 	}
 }
 
+void AAIEnemy::OnRep_GuardState()
+{
+	OnStateChanged(GuardState);
+}
+
 void AAIEnemy::SetGuardState(EAIState NewState)
 {
 	if (GuardState == NewState)
@@ -121,7 +134,7 @@ void AAIEnemy::SetGuardState(EAIState NewState)
 
 	GuardState = NewState;
 
-	OnStateChanged(GuardState);
+	OnRep_GuardState();
 	
 }
 
@@ -171,4 +184,3 @@ void AAIEnemy::MoveToNextPatrolPoint()
 
 	UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), CurrentPatrolPoint);
 }
-
